@@ -59,7 +59,7 @@ public class FraudDetector extends KeyedProcessFunction<String, FraudDetectionJo
 
 				collector.collect(alert);
 			}
-			// Clean up our state
+			// Clean up our staten
 			cleanUp(context);
 		}
 

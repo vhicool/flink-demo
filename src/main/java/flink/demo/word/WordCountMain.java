@@ -20,8 +20,6 @@ public class WordCountMain {
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		//设置并行度
 		env.getConfig().setParallelism(2);
-		//检查点周期
-		//env.enableCheckpointing(1000);
 		//输入数据
 		DataStreamSource<String> dataStreamSource = env.fromElements("Hello my name is li", "Hello my name is li", "name is li");
 		//operator[1]
@@ -37,7 +35,7 @@ public class WordCountMain {
 			}
 		})
 				//单独设置operator[1]的并行度
-				.setParallelism(1)
+//				.setParallelism(10)
 				//根据key，将数据发送到不同subTasks
 				.keyBy(0)
 				.reduce(new ReduceFunction<Tuple2<String, Integer>>() {
@@ -45,7 +43,7 @@ public class WordCountMain {
 					public Tuple2<String, Integer> reduce(Tuple2<String, Integer> value1, Tuple2<String, Integer> value2) throws Exception {
 						return new Tuple2<>(value1.f0, value1.f1 + value2.f1);
 					}
-				})
+				}).setParallelism(2)
 				.print();
 
 		//Streaming 程序必须加这个才能启动程序，否则不会有结果
